@@ -11,6 +11,16 @@ public class Operator {
         this.missions = new LinkedList<>(); // Initializes an empty list of missions.
     }
 
+    public Operator (String name, int number, LinkedList<Mission>missions){
+        this.name = name;
+        this.number = number;
+        this.missions = new LinkedList<>(missions); // create a copy
+        for (Mission mission : missions) {
+            this.missions.add(mission);
+            mission.setOperator(this); // Link operator to mission
+        }
+    }
+
     // Getter for the operators name
     public String getName() { return name; }
 
@@ -18,10 +28,21 @@ public class Operator {
     public int getNumber() { return number; }
 
     // Adds a mission to the operators mission list
-    public void addMission(Mission mission) { missions.add(mission); } // Corrected: add to the missions list, not to the mission itself. }
+    public void addMission(Mission mission) {
+        if (mission == null || missions.contains(mission)) return;
+
+        missions.add(mission);
+        mission.setOperator(this); // ensures operator is assigned in the mission to
+    }
 
     // Removes a mission from the operators mission list
-        public void removeMission(Mission mission) { missions.remove(mission);}
+    public void removeMission(Mission mission) {
+        if (mission == null || !missions.contains(mission)) {
+            return;
+        }
+        missions.remove(mission); // remove from operator side
+        mission.removeOperator(); // remove from mission side
+    }
 
     // Returns a copy of the missions list to avoid external modification.
     public LinkedList<Mission> getMissions() { return new LinkedList<>(missions); }

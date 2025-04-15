@@ -44,6 +44,8 @@ public class Mission {
         this.operator = operator;
     }
 
+    public void removeOperator() { this.operator = null; }
+
     public LinkedList<Drone> getDrones() {
         return new LinkedList<>(drones);
     }
@@ -53,7 +55,11 @@ public class Mission {
     }
 
     public void removeDrone(Drone drone) {
+        if (drone == null || !drones.contains(drone)) {
+            return;
+        }
         drones.remove(drone);
+        drone.removeMission(this);
     }
 
     public String getReport() {
